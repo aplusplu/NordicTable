@@ -13,9 +13,8 @@ function Menu() {
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    // useEffect runs after the component renders.
-    // Using it here because fetching backend data is a side effect:
-    // it happens outside the normal rendering flow.
+    // Fetching data from the backend is a side effect, so it belongs in useEffect.
+    // We only want this request to run once when the page first mounts.
     const fetchDishes = async () => {
       try {
         setIsLoading(true);
@@ -23,8 +22,9 @@ function Menu() {
 
         const result = await getAllDishes();
 
-        // The backend always wraps the real data inside result.data.
-        // Checking result.status first so we can handle API errors safely.
+        // The backend returns a wrapper object:
+        // { status, message, data }
+        // We validate status before using the actual dishes array.
         if (result.status !== "ok") {
           throw new Error(result.message || "Kunne ikke hente menuen.");
         }
@@ -43,6 +43,8 @@ function Menu() {
     fetchDishes();
   }, []);
 
+  // useMemo prevents unnecessary recalculation on every render.
+  // The filtered arrays are only recomputed when dishes changes.
   const starters = useMemo(
     () => dishes.filter((dish) => dish.category === "starter"),
     [dishes],
@@ -58,24 +60,20 @@ function Menu() {
     [dishes],
   );
 
-  // useMemo avoids recalculating the filtered arrays on every render
-  // unless the dishes array actually changes.
-  // This is not mandatory for small lists, but it's good practice in React structure.
-
   return (
-    <div className="min-h-screen bg-[#F9F6F1]">
-      <SiteHeader light />
+    <div className="min-h-screen bg-[#F7F5F2]">
+      <SiteHeader variant="light" />
 
       <main>
         <PageHero
           eyebrow="Vores menu"
           title="Smagsoplevelser fra det nordiske køkken"
-          text="Udforsk vores menukort med sæsonens bedste råvarer, tilberedt med fokus på kvalitet, enkelhed og hygge."
+          text="Alt på vores menu er tilberedt af sæsonens friskeste råvarer. Vi arbejder tæt med lokale producenter for at sikre den bedste kvalitet."
           image="/media/assets/headerbg.png"
-          height="min-h-[210px] md:min-h-[320px]"
+          height="h-[258px] md:h-[420px]"
         />
 
-        <section className="mx-auto max-w-[1440px] px-4 py-10 md:px-8 md:py-16">
+        <section className="mx-auto max-w-[1440px] px-4 py-10 md:px-10 md:py-16 lg:px-[100px]">
           {isLoading && (
             <div className="rounded-md border border-[#D7C7A7] bg-white px-5 py-6 text-sm text-[#5F5F5F]">
               Henter menu...
@@ -91,8 +89,11 @@ function Menu() {
           {!isLoading && !errorMessage && (
             <div className="space-y-12 md:space-y-16">
               <section>
-                <SectionHeading eyebrow="Forretter" title="Forretter" />
-                <div className="mt-6 bg-transparent">
+                <SectionHeading
+                  title="Forretter"
+                  image="/media/assets/appetizers.png"
+                />
+                <div className="mt-6">
                   {starters.map((dish) => (
                     <DishRow key={dish._id} dish={dish} />
                   ))}
@@ -100,7 +101,10 @@ function Menu() {
               </section>
 
               <section>
-                <SectionHeading eyebrow="Hovedretter" title="Hovedretter" />
+                <SectionHeading
+                  title="Hovedretter"
+                  image="/media/assets/mainCourses.png"
+                />
                 <div className="mt-6">
                   {mains.map((dish) => (
                     <DishRow key={dish._id} dish={dish} />
@@ -109,7 +113,10 @@ function Menu() {
               </section>
 
               <section>
-                <SectionHeading eyebrow="Desserter" title="Desserter" />
+                <SectionHeading
+                  title="Desserter"
+                  image="/media/assets/desserts.png"
+                />
                 <div className="mt-6">
                   {desserts.map((dish) => (
                     <DishRow key={dish._id} dish={dish} />

@@ -1,104 +1,114 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { HiOutlineMenuAlt3, HiOutlineX } from "react-icons/hi";
+import MobileMenu from "./MobileMenu";
 
-const navItems = [
-  { to: "/", label: "Forside" },
-  { to: "/menu", label: "Menu" },
-  { to: "/booking", label: "Bestil bord" },
-  { to: "/login", label: "Log ind" },
-];
-
-function SiteHeader({ light = true }) {
+function SiteHeader({ variant = "transparent" }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const linkBase =
-    "text-sm font-medium uppercase tracking-wide transition-colors duration-200";
-  const linkColor = light
-    ? "text-white/85 hover:text-[#C0A062]"
-    : "text-[#1A1A1A] hover:text-[#916B1C]";
+  const isTransparent = variant === "transparent";
+  const isLight = variant === "light";
+  const isDark = variant === "dark";
 
-  const activeColor = light ? "text-[#C0A062]" : "text-[#916B1C]";
+  const logoSrc =
+    isTransparent || isDark ? "/media/logoWhite.png" : "/media/logoBlack.png";
+
+  const desktopLinkBase =
+    "text-[12px] font-semibold uppercase tracking-[0.04em] transition";
+
+  const desktopLinkDefaultColor =
+    isTransparent || isDark ? "text-white" : "text-[#1A1A1A]";
+
+  const desktopLinkActiveColor = "text-[#C0A062]";
+  const desktopLinkHoverColor = "hover:text-[#C0A062]";
 
   return (
     <>
-      <header
-        className={`w-full ${
-          light ? "bg-transparent absolute inset-x-0 top-0 z-30" : "bg-white"
-        }`}
-      >
-        <div className="mx-auto flex max-w-[1440px] items-center justify-between px-4 py-4 md:px-8 md:py-6">
-          <Link to="/" className="shrink-0">
-            <img
-              src={light ? "/media/logoWhite.png" : "/media/logoBlack.png"}
-              alt="Nordic Table"
-              className="h-8 w-auto md:h-10"
-            />
-          </Link>
-
-          <nav className="hidden items-center gap-8 md:flex">
-            {navItems.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                className={({ isActive }) =>
-                  `${linkBase} ${isActive ? activeColor : `${linkColor}`}`
-                }
-              >
-                {item.label}
-              </NavLink>
-            ))}
-          </nav>
-
+      <header className="absolute inset-x-0 top-0 z-30 md:relative">
+        {/* MOBILE */}
+        <div className="mx-auto flex max-w-[1440px] items-start justify-end bg-transparent px-[26px] py-[14px] md:hidden">
           <button
             type="button"
-            aria-label={isOpen ? "Luk menu" : "Åbn menu"}
-            className={`grid h-9 w-9 place-items-center md:hidden ${
-              light ? "text-[#C0A062]" : "text-[#916B1C]"
-            }`}
-            onClick={() => setIsOpen((prev) => !prev)}
+            onClick={() => setIsOpen(true)}
+            aria-label="Åbn menu"
+            className="relative z-40 h-[36px] w-[36px]"
           >
-            {isOpen ? <HiOutlineX size={28} /> : <HiOutlineMenuAlt3 size={28} />}
+            <span className="absolute left-1/2 top-[9px] block h-[2px] w-[22px] -translate-x-1/2 bg-[#C0A062]" />
+            <span className="absolute left-1/2 top-1/2 block h-[2px] w-[22px] -translate-x-1/2 -translate-y-1/2 bg-[#C0A062]" />
+            <span className="absolute left-1/2 bottom-[9px] block h-[2px] w-[22px] -translate-x-1/2 bg-[#C0A062]" />
           </button>
+        </div>
+
+        {/* DESKTOP */}
+        <div
+          className={`mx-auto hidden max-w-[1440px] items-center justify-between md:flex ${
+            isTransparent
+              ? "absolute inset-x-0 top-0 px-[32px] pt-[28px] bg-transparent"
+              : isLight
+                ? "relative border-b border-[#E7E0D5] bg-white px-[30px] py-[13px]"
+                : "relative bg-[#1A1A1A] px-[30px] py-[14px]"
+          }`}
+        >
+          <Link to="/">
+            <img src={logoSrc} alt="Nordic Table" className="h-[58px] w-auto" />
+          </Link>
+
+          <nav className="flex items-center gap-10">
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                `${desktopLinkBase} ${
+                  isActive
+                    ? desktopLinkActiveColor
+                    : `${desktopLinkDefaultColor} ${desktopLinkHoverColor}`
+                }`
+              }
+            >
+              Forside
+            </NavLink>
+
+            <NavLink
+              to="/menu"
+              className={({ isActive }) =>
+                `${desktopLinkBase} ${
+                  isActive
+                    ? desktopLinkActiveColor
+                    : `${desktopLinkDefaultColor} ${desktopLinkHoverColor}`
+                }`
+              }
+            >
+              Menu
+            </NavLink>
+
+            <NavLink
+              to="/booking"
+              className={({ isActive }) =>
+                `${desktopLinkBase} ${
+                  isActive
+                    ? desktopLinkActiveColor
+                    : `${desktopLinkDefaultColor} ${desktopLinkHoverColor}`
+                }`
+              }
+            >
+              Bestil bord
+            </NavLink>
+
+            <NavLink
+              to="/login"
+              className={({ isActive }) =>
+                `${desktopLinkBase} ${
+                  isActive
+                    ? desktopLinkActiveColor
+                    : `${desktopLinkDefaultColor} ${desktopLinkHoverColor}`
+                }`
+              }
+            >
+              Log ind
+            </NavLink>
+          </nav>
         </div>
       </header>
 
-      {isOpen && (
-        <div className="fixed inset-0 z-40 bg-[#F9F6F1] md:hidden">
-          <div className="flex items-center justify-between border-b border-black/10 px-4 py-4">
-            <img
-              src="/media/logoBlack.png"
-              alt="Nordic Table"
-              className="h-7 w-auto"
-            />
-            <button
-              type="button"
-              aria-label="Luk menu"
-              className="text-[#8C8C8C]"
-              onClick={() => setIsOpen(false)}
-            >
-              <HiOutlineX size={26} />
-            </button>
-          </div>
-
-          <nav className="flex flex-col items-center justify-center gap-6 pt-28">
-            {navItems.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                onClick={() => setIsOpen(false)}
-                className={({ isActive }) =>
-                  `font-cormorant text-[22px] ${
-                    isActive ? "text-[#916B1C]" : "text-[#4B4B4B]"
-                  }`
-                }
-              >
-                {item.label}
-              </NavLink>
-            ))}
-          </nav>
-        </div>
-      )}
+      <MobileMenu isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </>
   );
 }
