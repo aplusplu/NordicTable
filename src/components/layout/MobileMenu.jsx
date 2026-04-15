@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 
-function MobileMenu({ isOpen, onClose }) {
+function MobileMenu({ isOpen, onClose, authUser, isAdmin, onLogout }) {
   if (!isOpen) return null;
 
   return (
@@ -67,17 +67,41 @@ function MobileMenu({ isOpen, onClose }) {
             Book bord
           </NavLink>
 
-          <NavLink
-            to="/login"
-            onClick={onClose}
-            className={({ isActive }) =>
-              `font-cormorant text-[32px] leading-none ${
-                isActive ? "text-[#916B1C]" : "text-[#6F6F6F]"
-              }`
-            }
-          >
-            Log ind
-          </NavLink>
+          {isAdmin && (
+            <NavLink
+              to="/backoffice"
+              onClick={onClose}
+              className={({ isActive }) =>
+                `font-cormorant text-[32px] leading-none ${
+                  isActive ? "text-[#916B1C]" : "text-[#6F6F6F]"
+                }`
+              }
+            >
+              Backoffice
+            </NavLink>
+          )}
+
+          {!authUser ? (
+            <NavLink
+              to="/login"
+              onClick={onClose}
+              className={({ isActive }) =>
+                `font-cormorant text-[32px] leading-none ${
+                  isActive ? "text-[#916B1C]" : "text-[#6F6F6F]"
+                }`
+              }
+            >
+              Log ind
+            </NavLink>
+          ) : (
+            <button
+              type="button"
+              onClick={onLogout}
+              className="font-cormorant text-[32px] leading-none text-[#6F6F6F] transition hover:text-[#916B1C]"
+            >
+              Log ud
+            </button>
+          )}
         </nav>
       </div>
     </div>

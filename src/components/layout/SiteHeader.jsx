@@ -1,9 +1,19 @@
-import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import MobileMenu from "./MobileMenu";
 
 function SiteHeader({ variant = "transparent" }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [authUser, setAuthUser] = useState(() => {
+    try {
+      const savedUser = localStorage.getItem("user");
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  const navigate = useNavigate();
 
   const isTransparent = variant === "transparent";
   const isLight = variant === "light";
@@ -13,13 +23,60 @@ function SiteHeader({ variant = "transparent" }) {
     isTransparent || isDark ? "/media/logoWhite.png" : "/media/logoBlack.png";
 
   const desktopLinkBase =
-    "text-[12px] font-semibold uppercase tracking-[0.04em] transition";
+    "text-[12px] font-semibold uppercase tracking-[0.04em] transition-colors duration-150";
 
   const desktopLinkDefaultColor =
     isTransparent || isDark ? "text-white" : "text-[#1A1A1A]";
 
   const desktopLinkActiveColor = "text-[#C0A062]";
   const desktopLinkHoverColor = "hover:text-[#C0A062]";
+
+  // Keep navbar auth state in sync with localStorage changes.
+  // This covers login/logout changes made elsewhere in the app.
+  useEffect(() => {
+    const syncAuthState = () => {
+      const token = localStorage.getItem("token");
+      const savedUser = localStorage.getItem("user");
+
+      if (!token || !savedUser) {
+        setAuthUser(null);
+        return;
+      }
+
+      try {
+        setAuthUser(JSON.parse(savedUser));
+      } catch (error) {
+        console.error("Failed to parse stored user:", error);
+        setAuthUser(null);
+      }
+    };
+
+    window.addEventListener("storage", syncAuthState);
+    window.addEventListener("auth-changed", syncAuthState);
+
+    return () => {
+      window.removeEventListener("storage", syncAuthState);
+      window.removeEventListener("auth-changed", syncAuthState);
+    };
+  }, []);
+
+  const isAdmin = String(authUser?.role || "").toLowerCase() === "admin";
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setAuthUser(null);
+    setIsOpen(false);
+    window.dispatchEvent(new Event("auth-changed"));
+    navigate("/");
+  };
+
+  const getDesktopLinkClassName = ({ isActive }) =>
+    `${desktopLinkBase} ${
+      isActive
+        ? desktopLinkActiveColor
+        : `${desktopLinkDefaultColor} ${desktopLinkHoverColor}`
+    }`;
 
   return (
     <>
@@ -40,75 +97,75 @@ function SiteHeader({ variant = "transparent" }) {
 
         {/* DESKTOP */}
         <div
-          className={`mx-auto hidden max-w-[1440px] items-center justify-between md:flex ${
+          className={`hidden md:block ${
             isTransparent
-              ? "absolute inset-x-0 top-0 px-[32px] pt-[28px] bg-transparent"
+              ? "absolute inset-x-0 top-0 bg-transparent"
               : isLight
-                ? "relative border-b border-[#E7E0D5] bg-white px-[30px] py-[13px]"
-                : "relative bg-[#1A1A1A] px-[30px] py-[14px]"
+                ? "relative w-full border-b border-[#E7E0D5] bg-white"
+                : "relative w-full bg-[#1A1A1A]"
           }`}
         >
-          <Link to="/">
-            <img src={logoSrc} alt="Nordic Table" className="h-[58px] w-auto" />
-          </Link>
+          <div
+            className={`mx-auto flex max-w-[1440px] items-center justify-between ${
+              isTransparent
+                ? "px-[32px] pt-[28px]"
+                : isLight
+                  ? "px-[30px] py-[13px]"
+                  : "px-[30px] py-[14px]"
+            }`}
+          >
+            <Link to="/">
+              <img
+                src={logoSrc}
+                alt="Nordic Table"
+                className="h-[58px] w-auto"
+              />
+            </Link>
 
-          <nav className="flex items-center gap-10">
-            <NavLink
-              to="/"
-              className={({ isActive }) =>
-                `${desktopLinkBase} ${
-                  isActive
-                    ? desktopLinkActiveColor
-                    : `${desktopLinkDefaultColor} ${desktopLinkHoverColor}`
-                }`
-              }
-            >
-              Forside
-            </NavLink>
+            <nav className="flex items-center gap-10">
+              <NavLink to="/" className={getDesktopLinkClassName}>
+                Forside
+              </NavLink>
 
-            <NavLink
-              to="/menu"
-              className={({ isActive }) =>
-                `${desktopLinkBase} ${
-                  isActive
-                    ? desktopLinkActiveColor
-                    : `${desktopLinkDefaultColor} ${desktopLinkHoverColor}`
-                }`
-              }
-            >
-              Menu
-            </NavLink>
+              <NavLink to="/menu" className={getDesktopLinkClassName}>
+                Menu
+              </NavLink>
 
-            <NavLink
-              to="/booking"
-              className={({ isActive }) =>
-                `${desktopLinkBase} ${
-                  isActive
-                    ? desktopLinkActiveColor
-                    : `${desktopLinkDefaultColor} ${desktopLinkHoverColor}`
-                }`
-              }
-            >
-              Bestil bord
-            </NavLink>
+              <NavLink to="/booking" className={getDesktopLinkClassName}>
+                Bestil bord
+              </NavLink>
 
-            <NavLink
-              to="/login"
-              className={({ isActive }) =>
-                `${desktopLinkBase} ${
-                  isActive
-                    ? desktopLinkActiveColor
-                    : `${desktopLinkDefaultColor} ${desktopLinkHoverColor}`
-                }`
-              }
-            >
-              Log ind
-            </NavLink>
-          </nav>
+              {isAdmin && (
+                <NavLink to="/backoffice" className={getDesktopLinkClassName}>
+                  Backoffice
+                </NavLink>
+              )}
+
+              {!authUser ? (
+                <NavLink to="/login" className={getDesktopLinkClassName}>
+                  Log ind
+                </NavLink>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className={`${desktopLinkBase} ${desktopLinkDefaultColor} ${desktopLinkHoverColor}`}
+                >
+                  Log ud
+                </button>
+              )}
+            </nav>
+          </div>
         </div>
       </header>
 
-      <MobileMenu isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <MobileMenu
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        authUser={authUser}
+        isAdmin={isAdmin}
+        onLogout={handleLogout}
+      />
     </>
   );
 }
