@@ -124,10 +124,11 @@ function LoginForm() { // LoginForm component that renders a login form and hand
         disabled={isSubmitting} // The submit button is disabled when isSubmitting is true, preventing the user from clicking the button multiple times while a login request is in progress. This provides a better user experience by avoiding duplicate submissions and potential issues with multiple login attempts. The disabled attribute is tied to the isSubmitting state, which is set to true when the login request starts and reset to false when the request completes (either successfully or with an error). This ensures that the button is only active when the form is ready for user interaction, and it provides visual feedback to the user that their login attempt is being processed.
         className="mt-[8px] h-[40px] w-full bg-black text-[14px] font-medium uppercase text-white shadow-[0_4px_4px_rgba(0,0,0,0.15)] transition hover:bg-[#1f1f1f] disabled:cursor-not-allowed disabled:opacity-70"
       >
-        {isSubmitting ? "Logger ind..." : "Log ind"} // The button text changes based on the isSubmitting state. If isSubmitting is true, it shows "Logger ind..." to indicate that the login request is being processed. If isSubmitting is false, it shows "Log ind", which is the default state of the button when it's ready for user interaction. This dynamic text provides feedback to the user about the current state of their login attempt, improving the user experience by letting them know that their action is being processed. The disabled attribute of the button is also tied to the isSubmitting state, preventing multiple submissions while a login attempt is in progress.
+
+        {isSubmitting ? "Logger ind..." : "Log ind"}
       </button>
     </form>
   );
 }
-
+//The button text changes based on the isSubmitting state. If isSubmitting is true, it shows "Logger ind..." to indicate that the login request is being processed. If isSubmitting is false, it shows "Log ind", which is the default state of the button when it's ready for user interaction. This dynamic text provides feedback to the user about the current state of their login attempt, improving the user experience by letting them know that their action is being processed. The disabled attribute of the but ton is also tied to the isSubmitting state, preventing multiple submissions while a login attempt is in progress.
 export default LoginForm;

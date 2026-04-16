@@ -1,6 +1,6 @@
 import api from "./api";
 
-// Send a real booking request to the backend.
+// Sending a real booking request to the backend.
 // The backend expects:
 // {
 //   name: string,

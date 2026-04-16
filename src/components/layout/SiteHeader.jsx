@@ -16,17 +16,17 @@ function SiteHeader({ variant = "transparent" }) {
   const navigate = useNavigate();
 
   const isTransparent = variant === "transparent";
-  const isLight = variant === "light";
-  const isDark = variant === "dark";
 
-  const logoSrc =
-    isTransparent || isDark ? "/media/logoWhite.png" : "/media/logoBlack.png";
+  const logoSrc = isTransparent
+    ? "/media/logoWhite.png"
+    : "/media/logoBlack.png";
 
   const desktopLinkBase =
     "text-[12px] font-semibold uppercase tracking-[0.04em] transition-colors duration-150";
 
-  const desktopLinkDefaultColor =
-    isTransparent || isDark ? "text-white" : "text-[#1A1A1A]";
+  const desktopLinkDefaultColor = isTransparent
+    ? "text-white"
+    : "text-[#1A1A1A]";
 
   const desktopLinkActiveColor = "text-[#C0A062]";
   const desktopLinkHoverColor = "hover:text-[#C0A062]";
@@ -100,20 +100,15 @@ function SiteHeader({ variant = "transparent" }) {
           className={`hidden md:block ${
             isTransparent
               ? "absolute inset-x-0 top-0 bg-transparent"
-              : isLight
-                ? "relative w-full border-b border-[#E7E0D5] bg-white"
-                : "relative w-full bg-[#1A1A1A]"
+              : "relative w-full border-b border-[#E7E0D5] bg-white"
           }`}
         >
-          <div
-            className={`mx-auto flex max-w-[1440px] items-center justify-between ${
-              isTransparent
-                ? "px-[32px] pt-[28px]"
-                : isLight
-                  ? "px-[30px] py-[13px]"
-                  : "px-[30px] py-[14px]"
-            }`}
-          >
+          {/*
+            Same inner layout box as BackofficeHeader:
+            same height, same horizontal padding, same alignment.
+            This keeps the logo and nav items in identical positions.
+          */}
+          <div className="mx-auto flex h-[90px] max-w-[1440px] items-center justify-between px-[30px] md:h-[96px]">
             <Link to="/">
               <img
                 src={logoSrc}
