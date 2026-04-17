@@ -2,26 +2,26 @@ import { Link } from "react-router-dom";
 
 // Small helper kept inside the component file so the section stays self-contained.
 function formatCategory(category) {
-  if (category === "starter") return "Forret";
+  if (category === "starter") return "Forret"; //  checks if the category of the dish is "starter". If it is, we return the string "Forret", this function is used to convert the category value from the backend to a more user-friendly format in Danish for display purposes on the frontend.
   if (category === "main") return "Hovedret";
   if (category === "dessert") return "Dessert";
   return "Ret";
 }
 
 function formatPrice(price) {
-  const numericPrice = Number(price);
+  const numericPrice = Number(price); //numericPrice is a variable that holds the numeric value of the price string. The Number() function is used to convert the price string to a number, which is then assigned to the numericPrice variable. This allows us to check if the conversion was successful (i.e., if the price string was a valid number) and format it accordingly. If the conversion results in NaN (Not a Number), we can handle that case separately, ensuring that we still display the price in a user-friendly way even if the input is not a valid number.
 
   if (Number.isNaN(numericPrice)) {
     return `${price} kr.`;
   }
 
-  return `${numericPrice} kr.`;
+  return `${numericPrice} kr.`; // if the conversion is successful, we return a formatted string that includes the numeric price followed by " kr.",this function ensures that the price is displayed in a consistent and user-friendly format on the frontend, regardless of whether the input was a valid number or not.
 }
 
 function HomeSignatureSection({
   dishes = [],
   isLoading = false,
-  errorMessage = "",
+  errorMessage = "", //errormessage is a string that holds any error message related to fetching the signature dishes. If there was an error during the data fetching process, this variable will contain the error message that can be displayed to the user. If there were no errors, it will be an empty string. This allows the component to conditionally render an error message if something went wrong while trying to retrieve the signature dishes from the backend.
 }) {
   return (
     <section

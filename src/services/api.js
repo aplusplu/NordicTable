@@ -9,4 +9,5 @@ const api = axios.create({
   },
 });
 
+//axios - when you make an HTTP request using axios, it returns a promise that resolves to the response of the request. You can use async/await syntax to handle these promises in a more readable way, as seen in the various service functions where we await the response from the API calls.
 export default api;

@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 
-function MobileMenu({ isOpen, onClose, authUser, isAdmin, onLogout }) {
+function MobileMenu({ isOpen, onClose, authUser, isAdmin, onLogout }) { // mobilemenu is a functional component that takes in several props: isOpen (a boolean that indicates whether the mobile menu should be displayed), onClose (a function that will be called to close the menu), authUser (an object representing the authenticated user, or null if no user is authenticated), isAdmin (a boolean indicating whether the authenticated user has admin privileges), and onLogout (a function that will be called to log the user out). These props are used to control the visibility of the menu, display different navigation options based on the user's authentication status and role, and handle user interactions such as closing the menu and logging out.
   if (!isOpen) return null;
 
   return (
@@ -107,5 +107,7 @@ function MobileMenu({ isOpen, onClose, authUser, isAdmin, onLogout }) {
     </div>
   );
 }
+
+//MobileMenu component  conditionally renders based on the isOpen prop, displaying a full-screen overlay with navigation links when open.It handles user authentication by showing either a login link or a logout button based on the authUser prop. The onClose function is called when the user clicks outside the menu or on the close button, while the onLogout function is triggered when the user clicks the logout button. 
 
 export default MobileMenu;

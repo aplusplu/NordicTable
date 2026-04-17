@@ -21,13 +21,13 @@ function Home() {
         setIsLoading(true);
         setErrorMessage("");
 
-        const result = await getAllDishes();
+        const result = await getAllDishes(); //await getAllDishes(); means "wait for the function to finish"
 
         if (result.status !== "ok") {
-          throw new Error(result.message || "Kunne ikke hente retter.");
+          throw new Error(result.message || "Kunne ikke hente retter."); // if the function returns an error then throw an error || means "or" - if result.message is falsy (undefined, null, empty string) then use the default message "Kunne ikke hente retter."
         }
 
-        setDishes(Array.isArray(result.data) ? result.data : []);
+        setDishes(Array.isArray(result.data) ? result.data : []); // If result.data is an array, use it; otherwise, use an empty array to prevent errors in the rest of the code that expects an array.
       } catch (error) {
         const message =
           error.message || "Der opstod en fejl ved hentning af retter.";
@@ -38,19 +38,19 @@ function Home() {
       }
     };
 
-    fetchDishes();
-  }, []);
+    fetchDishes(); // We call the function to actually execute the data fetching when the component mounts.
+  }, []); // [] means this effect runs only once when the component mounts.
 
   const signatureDishes = useMemo(() => {
     return dishes
       .filter(
         (dish) =>
-          dish.signature === true ||
+          dish.signature === true ||  //why use true and "true"? Because the backend might return the value as a boolean (true) or as a string ("true"), depending on how the data is stored or processed. By checking for both, we ensure that we correctly identify signature dishes regardless of the format in which the data is returned.
           dish.signature === "true" ||
           dish.isSignature === true ||
           dish.isSignature === "true",
       )
-      .slice(0, 3);
+      .slice(0, 3); //slice(0, 3) means "take the first 3 elements" [dishes[0], dishes[1], dishes[2]]
   }, [dishes]);
 
   const menuCount = dishes.length || 13;

@@ -179,7 +179,7 @@ function BookingForm() {
             className="h-[44px] w-full rounded-[5px] border border-[#CDB68A] bg-white px-[10px] text-[12px] text-[#1A1A1A] outline-none transition focus:border-[#916B1C] md:h-[50px] md:px-4 md:text-[14px]"
           >
             <option value="">Vælg antal gæster</option>
-            {Array.from({ length: 12 }, (_, index) => index + 1).map(
+            {Array.from({ length: 12 }, (_, index) => index + 1).map( //  generates an array of numbers from 1 to 12 using Array.from. The length of the array is set to 12, and the mapping function takes the index (starting from 0) and adds 1 to it to get the guest number. The resulting array will be [1, 2, 3, ..., 12]. We then map over this array to create option elements for each number of guests, allowing the user to select how many guests they want to book for.
               (guest) => (
                 <option key={guest} value={guest}>
                   {guest}
@@ -191,7 +191,7 @@ function BookingForm() {
 
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting} //disables the submit button while the form is being submitted. This prevents users from clicking the button multiple times and sending multiple booking requests while the first one is still being processed.
           className="h-[49px] w-full bg-[#916B1C] text-[12px] font-medium uppercase text-white shadow-[0_4px_4px_rgba(0,0,0,0.15)] transition hover:bg-[#7f5d16] disabled:cursor-not-allowed disabled:opacity-70 md:h-[56px] md:text-[16px]"
         >
           {isSubmitting ? "Sender..." : "Book bord"}

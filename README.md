@@ -110,3 +110,14 @@ services/
 ```bash
 npm install
 npm run dev
+
+node_modules is excluded via .gitignore
+Dependencies are managed via package.json and package-lock.json
+
+Core requirements are implemented:
+
+Layout and responsiveness
+API integration (GET, POST, PUT, DELETE)
+Booking system
+Admin backoffice (CRUD)
+Authentication and route protection

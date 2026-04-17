@@ -31,7 +31,6 @@ function DishRow({ dish }) {
         </p>
       </div>
 
-      {/* thin separator for dishes */}
       <div className="mt-4 h-[0.5px] w-full bg-[#DCD4C8]" />
     </article>
   );

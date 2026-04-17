@@ -78,4 +78,5 @@ function PageHero({
   );
 }
 
+//pagehero component  accepts several props to customize its content and appearance, including eyebrow, title, text, image, height, and variant. The component uses conditional rendering to adjust its layout and styling based on the variant prop, allowing it to serve both as a prominent hero section for the homepage and a more subdued header for other pages. It also incorporates animations using the framer-motion library with smooth fade-in and slide-up effects when the component mounts. The use of absolute positioning and overlay techniques ensures that the background image and content are displayed effectively across various screen sizes
 export default PageHero;

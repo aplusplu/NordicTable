@@ -7,7 +7,7 @@ import AdminDishMobileCard from "./AdminDishMobileCard";
 // onupdate, ondelete, and ontogglesignature are passed down to the AdminDishRow and AdminDishMobileCard components, which handle the specific interactions for each dish in the table and mobile card layouts, respectively. This separation of concerns allows for a cleaner and more maintainable codebase, as the AdminDishTable component focuses on the overall structure and state management, while the child components handle the individual dish interactions.
 //dishes is an array of dish objects that are displayed in the table and mobile card layouts. Each dish object contains information such as the title, description, category, price, image, and signature status. The component maps over the dishes array to render a row for each dish in the desktop table and a card for each dish in the mobile layout. The dishes data is typically fetched from an API and stored in the parent component's state, which is then passed down to AdminDishTable as a prop. This allows for dynamic rendering of the menu items based on the current state of the data. The component also handles cases where there are no dishes to display, showing an appropriate message to the user.
 
-function AdminDishTable({
+function AdminDishTable({ // the AdminDishTable component displays a list of dishes in a table format for desktop and a card format for mobile. It handles loading states, error messages, and the case when there are no dishes to display. The component receives props for the list of dishes, loading state, error message, and functions for updating, deleting, and toggling signature status of dishes. It conditionally renders content based on the state of the data and user interactions. The table includes columns for the dish title, description, type, price, image, signature status, and actions. The mobile card layout provides a more compact view of the same information for smaller screens. The component also handles user interactions such as updating, deleting, and toggling signature status of dishes through the provided callback functions. Overall, AdminDishTable is a key component in the backoffice section for managing the menu items effectively.
   dishes,
   isLoading,
   errorMessage,
@@ -32,7 +32,7 @@ function AdminDishTable({
     );
   }
 
-  if (!dishes.length) {
+  if (!dishes.length) { // if there are no dishes to display, we check if the dishes array  has a length of 0. If it is empty, we return a message "Ingen retter endnu." to inform the user that there are currently no dishes available. This provides feedback to the user in cases where the menu has not been populated yet or if all dishes have been removed. It enhances the user experience by clearly communicating the state of the data and preventing confusion that might arise from an empty table or card layout without any indication of why it's empty.
     return (
       <div className="py-12 text-center text-[16px] text-[#5F5F5F]">
         Ingen retter endnu.
